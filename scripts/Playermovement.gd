@@ -6,14 +6,14 @@ const JUMP_VELOCITY = -350.0
 
 # --- CONFIGURAÇÕES DO DASH ---
 @export_category("Configurações de Dash")
-@export var dash_distance: float = 150.0     # Distância total que o dash percorre em pixels
-@export var dash_duration: float = 0.2       # Tempo que o dash dura em segundos
-@export var dash_cooldown: float = 2.0     # Tempo de recarga em segundos
-
-# Máscara de colisão: Escolha quais camadas ignorar durante o dash (Bitmask)
-# Dica: No editor, você pode somar os valores ou usar ferramentas de exportação de layers, 
-# mas por padrão configurar o collision_mask diretamente via código resolve.
+@export var dash_distance: float = 150.0     
+@export var dash_duration: float = 0.2       
+@export var dash_cooldown: float = 2.0     
 @export_flags_2d_physics var layers_to_ignore_during_dash: int = 0 
+
+# --- REFERÊNCIAS AO NÓ FILHO ---
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D 
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D 
 
 var speed: float = 202.0
 var is_dashing: bool = false
@@ -23,35 +23,45 @@ var cooldown_timer: float = 0.0
 var dash_dir: float = 1.0
 var original_collision_mask: int = 0
 
+# Variáveis para guardar os valores originais da cápsula (Altura e Posição)
+var original_shape_height: float = 0.0
+var original_shape_position: Vector2 = Vector2.ZERO
+
 func _ready() -> void:
 	speed = base_speed
 	original_collision_mask = collision_mask
+	
+	# Salva os valores originais da Shape da Cápsula no início do jogo
+	if collision_shape and collision_shape.shape is CapsuleShape2D:
+		var capsule = collision_shape.shape as CapsuleShape2D
+		original_shape_height = capsule.height
+		original_shape_position = collision_shape.position
 
 func _physics_process(delta: float) -> void:
-	# Gerencia o cooldown do dash
+	# 1. Gerenciamento do Cooldown do Dash
+	print(is_on_floor())
 	if not can_dash:
 		cooldown_timer -= delta
 		if cooldown_timer <= 0.0:
 			can_dash = true
 			print("Dash recarregado! Pronto para uso.")
 
-	# Se estiver executando o dash, ele trava a movimentação normal e move rápido
+	# 2. Estado de Dash (Prioridade Máxima)
 	if is_dashing:
 		dash_timer -= delta
-		# Velocidade baseada na distância dividida pelo tempo para garantir a precisão do trajeto
 		velocity.x = dash_dir * (dash_distance / dash_duration)
-		velocity.y = 0 # Anula a gravidade durante o dash horizontal
+		velocity.y = 0 
 		move_and_slide()
 		
 		if dash_timer <= 0.0:
 			end_dash()
 		return
 
-	# Acionar o Dash (ex: tecla "dash" configurada no Input Map)
+	# Acionar o Dash
 	if Input.is_action_just_pressed("dash") and can_dash:
 		start_dash()
 
-	# Adiciona a gravidade padrão
+	# 3. Gravidade e Velocidade de Ar/Chão
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		speed = air_speed
@@ -62,15 +72,72 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	# Movimentação Horizontal
+	# Captura de Inputs de Movimento e Agachamento (utilizando a ação "crounch")
 	var direction := Input.get_axis("left", "right")
-	if direction:
+	var is_crouching_input = Input.is_action_pressed("crounch") and is_on_floor()
+
+	# Aplicar velocidade horizontal padrão
+	if direction != 0:
 		velocity.x = direction * speed
-		dash_dir = direction # Guarda a última direção que o player olhou/andou
+		dash_dir = direction
+		animated_sprite.flip_h = (direction < 0)
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 
+	# ==========================================
+	# MÁQUINA DE ESTADOS DE ANIMAÇÃO E COLISÃO
+	# ==========================================
+	
+	if not is_on_floor():
+		# --- ESTADOS NO AR ---
+		_reset_crouch_collision()
+		
+		if velocity.y < 0:
+			play_animation_safe("Jump")
+		else:
+			play_animation_safe("Falling")
+			
+	elif is_crouching_input:
+		# --- ESTADO DE AGACHADO ---
+		velocity.x = 0 
+		
+		# Reduz a altura da cápsula pela metade sem rotacioná-la
+		if collision_shape and collision_shape.shape is CapsuleShape2D:
+			var capsule = collision_shape.shape as CapsuleShape2D
+			capsule.height = original_shape_height / 2.0
+			# Ajusta levemente a posição Y para baixo para compensar a diminuição do topo e manter os pés no chão
+			collision_shape.position.y = original_shape_position.y + (original_shape_height / 4.0)
+		
+		# Gerencia as animações de agachamento
+		if animated_sprite.animation == "Crounching":
+			if not animated_sprite.is_playing():
+				play_animation_safe("Crounched")
+		elif animated_sprite.animation != "Crounched":
+			play_animation_safe("Crounching")
+			
+	else:
+		# --- ESTADOS NO CHÃO (PARADO OU CORRENDO) ---
+		_reset_crouch_collision()
+		
+		if direction != 0:
+			play_animation_safe("Run")
+		else:
+			play_animation_safe("Idle")
+
 	move_and_slide()
+
+# Função auxiliar para evitar reiniciar a mesma animação a cada frame
+func play_animation_safe(anim_name: String) -> void:
+	if animated_sprite.animation != anim_name:
+		animated_sprite.play(anim_name)
+
+# Restaura a altura e posição originais da cápsula de pé
+func _reset_crouch_collision() -> void:
+	if collision_shape and collision_shape.shape is CapsuleShape2D:
+		var capsule = collision_shape.shape as CapsuleShape2D
+		if capsule.height != original_shape_height:
+			capsule.height = original_shape_height
+			collision_shape.position = original_shape_position
 
 func start_dash() -> void:
 	is_dashing = true
@@ -78,7 +145,6 @@ func start_dash() -> void:
 	dash_timer = dash_duration
 	cooldown_timer = dash_cooldown
 	
-	# Aplica a invencibilidade ignorando a camada escolhida no Inspector
 	if layers_to_ignore_during_dash != 0:
 		collision_mask = collision_mask & ~layers_to_ignore_during_dash
 	
@@ -86,5 +152,4 @@ func start_dash() -> void:
 
 func end_dash() -> void:
 	is_dashing = false
-	# Restaura a máscara de colisão original ao fim do dash
 	collision_mask = original_collision_mask
