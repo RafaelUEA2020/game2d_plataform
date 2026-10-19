@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b24lba5w6barp" path="res://assets/Characters/Foxy/Dizzy/spritesheet.png" id="9_vkqcq"]
 [ext_resource type="Texture2D" uid="uid://boalq8pqj0jd4" path="res://assets/Characters/Foxy/Wall Grab/spritesheet.png" id="10_p37y2"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yf5fn"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b4uku"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p37y2"]
 atlas = ExtResource("2_a1f57")
@@ -288,7 +288,10 @@ script = ExtResource("1_merdl")
 dash_duration = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1611960910]
-shape = SubResource("CapsuleShape2D_yf5fn")
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_b4uku")
+one_way_collision_margin = 0.0
+debug_color = Color(0.8392157, 0, 0, 0.60784316)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=329840879]
 sprite_frames = SubResource("SpriteFrames_g4v7s")
