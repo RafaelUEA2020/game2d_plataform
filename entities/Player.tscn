@@ -285,13 +285,15 @@ animations = [{
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player"]]
 script = ExtResource("1_merdl")
-dash_duration = 0.5
+dash_duration = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1611960910]
 shape = SubResource("CapsuleShape2D_yf5fn")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=329840879]
 sprite_frames = SubResource("SpriteFrames_g4v7s")
-animation = &"Crounched"
+animation = &"Stunned"
 autoplay = "Idle"
-frame_progress = 0.81802
+frame_progress = 0.8522819
+centered = false
+offset = Vector2(-15, -14)

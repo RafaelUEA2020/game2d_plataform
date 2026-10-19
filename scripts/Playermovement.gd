@@ -39,7 +39,6 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	# 1. Gerenciamento do Cooldown do Dash
-	print(is_on_floor())
 	if not can_dash:
 		cooldown_timer -= delta
 		if cooldown_timer <= 0.0:
@@ -48,6 +47,7 @@ func _physics_process(delta: float) -> void:
 
 	# 2. Estado de Dash (Prioridade Máxima)
 	if is_dashing:
+		play_animation_safe("Roll")
 		dash_timer -= delta
 		velocity.x = dash_dir * (dash_distance / dash_duration)
 		velocity.y = 0 
@@ -72,7 +72,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	# Captura de Inputs de Movimento e Agachamento (utilizando a ação "crounch")
+	# Captura de Inputs de Movimento e Agachamento
 	var direction := Input.get_axis("left", "right")
 	var is_crouching_input = Input.is_action_pressed("crounch") and is_on_floor()
 
@@ -101,19 +101,13 @@ func _physics_process(delta: float) -> void:
 		# --- ESTADO DE AGACHADO ---
 		velocity.x = 0 
 		
-		# Reduz a altura da cápsula pela metade sem rotacioná-la
+		# Reduz a altura da cápsula pela metade
 		if collision_shape and collision_shape.shape is CapsuleShape2D:
 			var capsule = collision_shape.shape as CapsuleShape2D
 			capsule.height = original_shape_height / 2.0
-			# Ajusta levemente a posição Y para baixo para compensar a diminuição do topo e manter os pés no chão
 			collision_shape.position.y = original_shape_position.y + (original_shape_height / 4.0)
 		
-		# Gerencia as animações de agachamento
-		if animated_sprite.animation == "Crounching":
-			if not animated_sprite.is_playing():
-				play_animation_safe("Crounched")
-		elif animated_sprite.animation != "Crounched":
-			play_animation_safe("Crounching")
+		play_animation_safe("Crounched")
 			
 	else:
 		# --- ESTADOS NO CHÃO (PARADO OU CORRENDO) ---
@@ -131,15 +125,19 @@ func play_animation_safe(anim_name: String) -> void:
 	if animated_sprite.animation != anim_name:
 		animated_sprite.play(anim_name)
 
-# Restaura a altura e posição originais da cápsula de pé
+# Restaura a altura e posição originais da cápsula de pé SEM dar o pulinho
 func _reset_crouch_collision() -> void:
 	if collision_shape and collision_shape.shape is CapsuleShape2D:
 		var capsule = collision_shape.shape as CapsuleShape2D
 		if capsule.height != original_shape_height:
 			capsule.height = original_shape_height
 			collision_shape.position = original_shape_position
+			global_position.y += (original_shape_height / 4.0)
 
 func start_dash() -> void:
+	
+	#função responsável por iniciar o dash.
+	
 	is_dashing = true
 	can_dash = false
 	dash_timer = dash_duration
@@ -151,5 +149,8 @@ func start_dash() -> void:
 	print("Dash iniciado! Recarga de 2 segundos iniciada...")
 
 func end_dash() -> void:
+	
+	#função reponsável por finalizar o dash.
+	
 	is_dashing = false
 	collision_mask = original_collision_mask
