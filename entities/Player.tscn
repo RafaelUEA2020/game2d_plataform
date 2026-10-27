@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://boalq8pqj0jd4" path="res://assets/Characters/Foxy/Wall Grab/spritesheet.png" id="10_p37y2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b4uku"]
+height = 24.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p37y2"]
 atlas = ExtResource("2_a1f57")
@@ -284,6 +285,7 @@ animations = [{
 }]
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player"]]
+floor_max_angle = 0.872665
 script = ExtResource("1_merdl")
 dash_duration = 0.3
 
