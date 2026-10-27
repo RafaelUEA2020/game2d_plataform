@@ -3,6 +3,8 @@ extends CharacterBody2D
 @export var base_speed: float = 202.0
 @export var air_speed: float = 185.0
 const JUMP_VELOCITY = -350.0
+const DOUBLE_JUMP_MULTIPLIER = 0.70  # força do pulo no ar = 65% do pulo normal
+const MAX_AIR_JUMPS = 1              # pulos extras permitidos no ar antes de tocar o chão
 
 # --- CONFIGURAÇÕES DO DASH ---
 @export_category("Configurações de Dash")
@@ -22,6 +24,7 @@ var dash_timer: float = 0.0
 var cooldown_timer: float = 0.0
 var dash_dir: float = 1.0
 var original_collision_mask: int = 0
+var air_jumps_used: int = 0
 
 # Variáveis para guardar os valores originais da cápsula (Altura e Posição)
 var original_shape_height: float = 0.0
@@ -67,10 +70,15 @@ func _physics_process(delta: float) -> void:
 		speed = air_speed
 	else:
 		speed = base_speed
+		air_jumps_used = 0  # tocou o chão: restaura o pulo duplo
 
 	# Lógica de Pulo
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor():
+			velocity.y = JUMP_VELOCITY
+		elif air_jumps_used < MAX_AIR_JUMPS:
+			velocity.y = JUMP_VELOCITY * DOUBLE_JUMP_MULTIPLIER
+			air_jumps_used += 1
 
 	# Captura de Inputs de Movimento e Agachamento
 	var direction := Input.get_axis("left", "right")
