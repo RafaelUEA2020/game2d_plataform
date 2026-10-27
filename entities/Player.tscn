@@ -286,6 +286,15 @@ animations = [{
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player", "player"]]
 collision_layer = 2
 collision_mask = 257
+slide_on_ceiling = false
+wall_min_slide_angle = 0.02617994
+floor_stop_on_slope = false
+floor_block_on_wall = false
+floor_max_angle = 1.0471976
+floor_snap_length = 5.0
+platform_on_leave = 1
+platform_floor_layers = 4294967041
+platform_wall_layers = 1
 script = ExtResource("1_merdl")
 dash_duration = 0.3
 
@@ -297,8 +306,7 @@ debug_color = Color(0.8392157, 0, 0, 0.60784316)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=329840879]
 sprite_frames = SubResource("SpriteFrames_g4v7s")
-animation = &"Stunned"
+animation = &"Idle"
 autoplay = "Idle"
-frame_progress = 0.8522819
 centered = false
 offset = Vector2(-15, -14)

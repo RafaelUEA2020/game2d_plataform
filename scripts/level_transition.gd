@@ -3,12 +3,16 @@ extends Area2D
 ## Cena que será carregada quando o Player tocar nesta área.
 @export_file("*.tscn") var next_scene_path: String
 
+## ID do spawn point na cena de destino. Se vazio, o Player não é movido.
+@export var target_spawn_id: String = ""
+
 var _transitioning := false
 
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
-	
+
+
 func _on_body_entered(body: Node2D) -> void:
 	if _transitioning:
 		return
@@ -19,4 +23,4 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 
 	_transitioning = true
-	SceneTransition.change_scene(next_scene_path)
+	SceneTransition.change_scene(next_scene_path, target_spawn_id)
