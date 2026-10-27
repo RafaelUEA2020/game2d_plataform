@@ -1,0 +1,24 @@
+[gd_scene format=4 uid="uid://suxml0c7fac8"]
+
+[ext_resource type="PackedScene" uid="uid://cdomtwbc1kvxj" path="res://entities/Terrain.tscn" id="1_4e17v"]
+[ext_resource type="PackedScene" uid="uid://dl3sej3hqonsq" path="res://entities/Player.tscn" id="2_6hwom"]
+[ext_resource type="PackedScene" uid="uid://dni67q2s532ux" path="res://entities/Camera2D.tscn" id="3_o2g0a"]
+[ext_resource type="PackedScene" uid="uid://kjys6ctg6jmv" path="res://entities/levelTransition.tscn" id="4_u2eis"]
+
+[node name="Fase2" type="Node2D" unique_id=899248660]
+
+[node name="Terrain" parent="." unique_id=301200687 instance=ExtResource("1_4e17v")]
+
+[node name="TileMapLayer" parent="Terrain" index="0" unique_id=466851497]
+tile_map_data = PackedByteArray("AAAAAAwAAAADAAEAAAABAAwAAAADAAEAAAACAAwAAAADAAEAAAADAAwAAAADAAEAAAAEAAwAAAADAAEAAAAFAAwAAAADAAEAAAAGAAwAAAADAAEAAAAHAAwAAAADAAEAAAAIAAwAAAADAAEAAAAOAAwAAAADAAEAAAAPAAwAAAADAAEAAAAQAAwAAAADAAEAAAARAAwAAAADAAEAAAAJAAwAAAADAAEAAAAKAAwAAAADAAEAAAALAAwAAAADAAEAAAAMAAwAAAADAAEAAAANAAwAAAADAAEAAAA=")
+
+[node name="CharacterBody2D" parent="." unique_id=1933169722 instance=ExtResource("2_6hwom")]
+position = Vector2(23, 170)
+
+[node name="Camera2D" parent="." unique_id=192899735 instance=ExtResource("3_o2g0a")]
+
+[node name="Area2D" parent="." unique_id=1817749354 instance=ExtResource("4_u2eis")]
+position = Vector2(241, 179)
+next_scene_path = "uid://dafk12f8vsxg5"
+
+[editable path="Terrain"]

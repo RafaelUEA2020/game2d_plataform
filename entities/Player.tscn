@@ -11,8 +11,12 @@
 [ext_resource type="Texture2D" uid="uid://b24lba5w6barp" path="res://assets/Characters/Foxy/Dizzy/spritesheet.png" id="9_vkqcq"]
 [ext_resource type="Texture2D" uid="uid://boalq8pqj0jd4" path="res://assets/Characters/Foxy/Wall Grab/spritesheet.png" id="10_p37y2"]
 
+<<<<<<< HEAD
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b4uku"]
 height = 24.0
+=======
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p37y2"]
+>>>>>>> d8aef91 (troca de fases adicionada, e animação de fade)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p37y2"]
 atlas = ExtResource("2_a1f57")
@@ -284,14 +288,20 @@ animations = [{
 "speed": 5.0
 }]
 
+<<<<<<< HEAD
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player"]]
 floor_max_angle = 0.872665
+=======
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player", "player"]]
+collision_layer = 2
+collision_mask = 257
+>>>>>>> d8aef91 (troca de fases adicionada, e animação de fade)
 script = ExtResource("1_merdl")
 dash_duration = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1611960910]
 texture_filter = 1
-shape = SubResource("CapsuleShape2D_b4uku")
+shape = SubResource("CapsuleShape2D_p37y2")
 one_way_collision_margin = 0.0
 debug_color = Color(0.8392157, 0, 0, 0.60784316)
 

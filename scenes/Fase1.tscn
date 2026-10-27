@@ -4,12 +4,12 @@
 [ext_resource type="PackedScene" uid="uid://dl3sej3hqonsq" path="res://entities/Player.tscn" id="2_d02of"]
 [ext_resource type="PackedScene" uid="uid://dni67q2s532ux" path="res://entities/Camera2D.tscn" id="3_j7s8k"]
 [ext_resource type="Texture2D" uid="uid://pik6f4ud25t8" path="res://assets/environment/Background/back.png" id="4_d02of"]
+[ext_resource type="PackedScene" uid="uid://kjys6ctg6jmv" path="res://entities/levelTransition.tscn" id="5_j7s8k"]
 
 [node name="Fase1" type="Node2D" unique_id=1148305556]
 
 [node name="Player" parent="." unique_id=1973213472 instance=ExtResource("2_d02of")]
 position = Vector2(29, 188)
-collision_layer = 2
 collision_mask = 9
 
 [node name="CollisionShape2D" parent="Player" index="0" unique_id=1611960910]
@@ -45,6 +45,10 @@ texture = ExtResource("4_d02of")
 centered = false
 region_enabled = true
 region_rect = Rect2(0, 0, 384, 208)
+
+[node name="Area2D" parent="." unique_id=1817749354 instance=ExtResource("5_j7s8k")]
+position = Vector2(493, 193)
+next_scene_path = "uid://suxml0c7fac8"
 
 [editable path="Player"]
 [editable path="Camera2D"]

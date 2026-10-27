@@ -15,6 +15,10 @@ run/main_scene="uid://dafk12f8vsxg5"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SceneTransition="*uid://doakemb7mxom8"
+
 [display]
 
 window/size/viewport_width=288
@@ -80,6 +84,7 @@ dash={
 2d_physics/layer_6="wall"
 2d_physics/layer_7="spikes"
 2d_physics/layer_8="thin_walls"
+2d_physics/layer_9="level_transition"
 
 [physics]
 
