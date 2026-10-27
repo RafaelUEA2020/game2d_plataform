@@ -21,6 +21,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if next_scene_path.is_empty():
 		push_warning("level_transition: nenhuma cena foi definida no Inspetor.")
 		return
-
+		
 	_transitioning = true
+	if body.has_method("lock"):
+		body.lock()
 	SceneTransition.change_scene(next_scene_path, target_spawn_id)

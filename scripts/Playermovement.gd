@@ -25,6 +25,7 @@ var cooldown_timer: float = 0.0
 var dash_dir: float = 1.0
 var original_collision_mask: int = 0
 var air_jumps_used: int = 0
+var can_move := true
 
 # Variáveis para guardar os valores originais da cápsula (Altura e Posição)
 var original_shape_height: float = 0.0
@@ -40,6 +41,15 @@ func _ready() -> void:
 		original_shape_height = capsule.height
 		original_shape_position = collision_shape.position
 
+func lock() -> void:
+	can_move = false
+	velocity.x = 0.0
+	if is_dashing:
+		end_dash()
+	
+func unlock() -> void:
+	can_move = true
+
 func _physics_process(delta: float) -> void:
 	# 1. Gerenciamento do Cooldown do Dash
 	if not can_dash:
@@ -47,7 +57,18 @@ func _physics_process(delta: float) -> void:
 		if cooldown_timer <= 0.0:
 			can_dash = true
 			print("Dash recarregado! Pronto para uso.")
-
+			
+	# Player travado (durante transição de cena): só gravidade, sem input
+	if not can_move:
+		if not is_on_floor():
+			velocity += get_gravity() * delta
+			play_animation_safe("Falling")
+		else:
+			velocity.x = 0.0
+			play_animation_safe("Idle")
+		move_and_slide()
+		return
+		
 	# 2. Estado de Dash (Prioridade Máxima)
 	if is_dashing:
 		play_animation_safe("Roll")
