@@ -9,8 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://ygtf3gokt5gb" path="res://assets/Characters/Foxy/run/spritesheet.png" id="6_idcse"]
 [ext_resource type="Texture2D" uid="uid://u7yx8up4er7j" path="res://assets/Characters/Foxy/jump/sprites/f-01.png" id="6_p37y2"]
 [ext_resource type="Texture2D" uid="uid://b24lba5w6barp" path="res://assets/Characters/Foxy/Dizzy/spritesheet.png" id="9_vkqcq"]
+[ext_resource type="Texture2D" uid="uid://boalq8pqj0jd4" path="res://assets/Characters/Foxy/Wall Grab/spritesheet.png" id="10_p37y2"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yf5fn"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p37y2"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p37y2"]
 atlas = ExtResource("2_a1f57")
@@ -128,6 +129,14 @@ region = Rect2(132, 0, 33, 32)
 atlas = ExtResource("9_vkqcq")
 region = Rect2(165, 0, 33, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_rhnw0"]
+atlas = ExtResource("10_p37y2")
+region = Rect2(0, 0, 33, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_myl71"]
+atlas = ExtResource("10_p37y2")
+region = Rect2(33, 0, 33, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_g4v7s"]
 animations = [{
 "frames": [{
@@ -138,7 +147,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_vkqcq")
 }],
 "loop": 1,
-"name": &"Crouched",
+"name": &"Crounched",
 "speed": 5.0
 }, {
 "frames": [{
@@ -152,7 +161,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_kqo1p")
 }],
 "loop": 1,
-"name": &"Crouching",
+"name": &"Crounching",
 "speed": 5.0
 }, {
 "frames": [{
@@ -261,16 +270,35 @@ animations = [{
 "loop": 1,
 "name": &"Stunned",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rhnw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_myl71")
+}],
+"loop": 1,
+"name": &"new_animation",
+"speed": 5.0
 }]
 
-[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player"]]
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player", "player"]]
+collision_layer = 2
+collision_mask = 257
 script = ExtResource("1_merdl")
+dash_duration = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1611960910]
-shape = SubResource("CapsuleShape2D_yf5fn")
+texture_filter = 1
+shape = SubResource("CapsuleShape2D_p37y2")
+one_way_collision_margin = 0.0
+debug_color = Color(0.8392157, 0, 0, 0.60784316)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=329840879]
 sprite_frames = SubResource("SpriteFrames_g4v7s")
-animation = &"Falling"
+animation = &"Stunned"
 autoplay = "Idle"
+frame_progress = 0.8522819
 centered = false
+offset = Vector2(-15, -14)
