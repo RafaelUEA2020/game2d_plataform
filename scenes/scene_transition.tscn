@@ -5,6 +5,7 @@
 [node name="SceneTransition" type="CanvasLayer" unique_id=2127377870]
 layer = 100
 script = ExtResource("1_0wykx")
+fade_time = null
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1368194463]
 anchors_preset = 15

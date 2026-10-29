@@ -285,7 +285,7 @@ animations = [{
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=1933169722 groups=["Player", "player"]]
 collision_layer = 2
-collision_mask = 257
+collision_mask = 769
 slide_on_ceiling = false
 wall_min_slide_angle = 0.02617994
 floor_stop_on_slope = false
@@ -300,6 +300,7 @@ dash_duration = 0.3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1611960910]
 texture_filter = 1
+position = Vector2(0, 3)
 shape = SubResource("CapsuleShape2D_p37y2")
 one_way_collision_margin = 0.0
 debug_color = Color(0.8392157, 0, 0, 0.60784316)
@@ -310,3 +311,7 @@ animation = &"Idle"
 autoplay = "Idle"
 centered = false
 offset = Vector2(-15, -14)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=674864844]
+limit_left = 0
+limit_top = 0

@@ -5,7 +5,5 @@
 [node name="Camera2D" type="Camera2D" unique_id=192899735]
 limit_left = 0
 limit_top = 0
-limit_right = 1280
-limit_bottom = 720
 limit_smoothed = true
 script = ExtResource("1_s0ajp")

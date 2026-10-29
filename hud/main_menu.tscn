@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://b1k7qtxqdeyev"]
+
+[ext_resource type="Script" uid="uid://wwbtohlb46dj" path="res://hud/main_menu.gd" id="1_lxge1"]
+
+[node name="MainMenu" type="Control" unique_id=1313647365]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lxge1")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1141038009]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(0.17785347, 0.17785347, 0.17785347, 1)
+
+[node name="TitleLabel" type="Label" parent="." unique_id=1865004232]
+texture_filter = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Fox Adventure"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=274381511]
+layout_mode = 0
+offset_right = 86.0
+offset_bottom = 101.0
+alignment = 1
+
+[node name="NewGameButton" type="Button" parent="VBoxContainer" unique_id=1601390471]
+layout_mode = 2
+text = "Novo Jogo"
+
+[node name="ContinueGameButton" type="Button" parent="VBoxContainer" unique_id=1147876864]
+layout_mode = 2
+text = "Continuar"
+
+[node name="ExitGameButton" type="Button" parent="VBoxContainer" unique_id=1673155799]
+layout_mode = 2
+text = "Sair"

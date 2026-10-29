@@ -4,7 +4,8 @@ extends CanvasLayer
 @export var fade_time := 0.5
 
 @onready var color_rect: ColorRect = $ColorRect
-
+const MAIN_MENU_SCENE := "res://scenes/main_menu.tscn"
+const GAME_OVER_SCENE := "res://scenes/game_over.tscn"
 var _busy := false
 
 
@@ -14,8 +15,14 @@ func _ready() -> void:
 	color_rect.modulate.a = 0.0
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+func go_to_menu() -> void:
+	change_scene(MAIN_MENU_SCENE, "", false)
 
-func change_scene(scene_path: String, spawn_id: String = "") -> void:
+
+func game_over() -> void:
+	change_scene(GAME_OVER_SCENE, "", false)
+
+func change_scene(scene_path: String, spawn_id: String = "", save_checkpoint: bool = true) -> void:
 	if _busy:
 		return
 	_busy = true
@@ -32,8 +39,15 @@ func change_scene(scene_path: String, spawn_id: String = "") -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	# 3. Move o Player para o spawn point (com a tela ainda escura)
+	# 3. Posiciona o Player e ajusta o HUD (com a tela ainda escura)
 	_place_player(spawn_id)
+	HUD.visible = not get_tree().current_scene.is_in_group("no_hud")
+
+	# Checkpoint automático (menus e game over não salvam)
+	if save_checkpoint:
+		SaveManager.data["scene_path"] = scene_path
+		SaveManager.data["spawn_id"] = spawn_id
+		SaveManager.save_game()
 
 	# 4. Fade in
 	var tween_in := create_tween()
@@ -42,7 +56,6 @@ func change_scene(scene_path: String, spawn_id: String = "") -> void:
 
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_busy = false
-
 
 func _place_player(spawn_id: String) -> void:
 	if spawn_id.is_empty():
@@ -56,9 +69,18 @@ func _place_player(spawn_id: String) -> void:
 	for spawn in get_tree().get_nodes_in_group("spawn_points"):
 		if spawn.spawn_id == spawn_id:
 			player.global_position = spawn.global_position
-			# Zera a velocidade para o Player não "herdar" movimento da fase anterior
 			if player is CharacterBody2D:
 				player.velocity = Vector2.ZERO
+			_snap_camera()
 			return
 
 	push_warning("SceneTransition: spawn point '%s' não encontrado." % spawn_id)
+
+
+func _snap_camera() -> void:
+	var camera := get_viewport().get_camera_2d()
+	if camera == null:
+		return
+	# Atualiza a posição de destino da câmera e elimina o deslize
+	camera.force_update_scroll()
+	camera.reset_smoothing()	

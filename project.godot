@@ -18,6 +18,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 SceneTransition="*uid://doakemb7mxom8"
+SaveManager="*uid://cafu5gn3hyscr"
+HUD="*uid://b2744olunhdar"
 
 [display]
 
@@ -85,6 +87,7 @@ dash={
 2d_physics/layer_7="spikes"
 2d_physics/layer_8="thin_walls"
 2d_physics/layer_9="level_transition"
+2d_physics/layer_10="collectible"
 
 [physics]
 

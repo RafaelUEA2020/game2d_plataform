@@ -30,6 +30,8 @@ var can_move := true
 # Variáveis para guardar os valores originais da cápsula (Altura e Posição)
 var original_shape_height: float = 0.0
 var original_shape_position: Vector2 = Vector2.ZERO
+	
+	
 
 func _ready() -> void:
 	speed = base_speed
@@ -51,6 +53,11 @@ func unlock() -> void:
 	can_move = true
 
 func _physics_process(delta: float) -> void:
+	
+	# Captura de Inputs de Movimento e Agachamento
+	var direction := Input.get_axis("left", "right")
+	var is_crouching_input = Input.is_action_pressed("crounch") and is_on_floor()
+	
 	# 1. Gerenciamento do Cooldown do Dash
 	if not can_dash:
 		cooldown_timer -= delta
@@ -96,14 +103,14 @@ func _physics_process(delta: float) -> void:
 	# Lógica de Pulo
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			velocity.y = JUMP_VELOCITY
+			# No chão: só pula se não estiver agachado
+			if not is_crouching_input:
+				velocity.y = JUMP_VELOCITY
 		elif air_jumps_used < MAX_AIR_JUMPS:
+			# No ar: pulo duplo
 			velocity.y = JUMP_VELOCITY * DOUBLE_JUMP_MULTIPLIER
 			air_jumps_used += 1
 
-	# Captura de Inputs de Movimento e Agachamento
-	var direction := Input.get_axis("left", "right")
-	var is_crouching_input = Input.is_action_pressed("crounch") and is_on_floor()
 
 	# Aplicar velocidade horizontal padrão
 	if direction != 0:
