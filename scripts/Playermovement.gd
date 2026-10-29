@@ -141,7 +141,9 @@ func _physics_process(delta: float) -> void:
 		if collision_shape and collision_shape.shape is CapsuleShape2D:
 			var capsule = collision_shape.shape as CapsuleShape2D
 			capsule.height = original_shape_height / 2.0
-			collision_shape.position.y = original_shape_position.y + (original_shape_height / 4.0)
+			# Usa a altura real (a Godot pode ter limitado pelo radius)
+			var height_diff : float = original_shape_height - capsule.height
+			collision_shape.position.y = original_shape_position.y + height_diff / 2.0
 		
 		play_animation_safe("Crounched")
 			
@@ -168,8 +170,7 @@ func _reset_crouch_collision() -> void:
 		if capsule.height != original_shape_height:
 			capsule.height = original_shape_height
 			collision_shape.position = original_shape_position
-			global_position.y += (original_shape_height / 4.0)
-
+			
 func start_dash() -> void:
 	
 	#função responsável por iniciar o dash.
