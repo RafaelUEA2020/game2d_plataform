@@ -313,5 +313,6 @@ centered = false
 offset = Vector2(-15, -14)
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=674864844]
+position = Vector2(-1, 0)
 limit_left = 0
-limit_top = 0
+limit_top = -10000
